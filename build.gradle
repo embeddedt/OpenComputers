@@ -4,14 +4,9 @@ buildscript {
             name = "forge"
             url = "https://maven.minecraftforge.net/"
         }
-        maven {
-            name 'FancyGradle'
-            url 'https://gitlab.com/api/v4/projects/26758973/packages/maven'
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.64'
-        classpath group: 'wtf.gofancy.fancygradle', name: 'wtf.gofancy.fancygradle.gradle.plugin', version: '1.1.+'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:6.0.20'
     }
 }
 
@@ -23,13 +18,6 @@ plugins {
 apply plugin: 'scala'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
-apply plugin: 'wtf.gofancy.fancygradle'
-
-fancyGradle {
-    patches {
-        resources
-    }
-}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -279,11 +267,13 @@ processResources {
 }
 
 jar {
+    /*
     configurations.embedded.each { dep ->
         from(project.zipTree(dep)) {
             exclude '*', 'META-INF', 'META-INF/**'
         }
     }
+    */
     manifest {
         attributes([
             "Specification-Title": "opencomputers",
@@ -304,13 +294,13 @@ javadoc {
 task apiJar(type: Jar) {
     from sourceSets.main.allSource
     from sourceSets.main.output
-    classifier = 'api'
+    archiveClassifier.set('api')
     include 'li/cil/oc/api/**'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
-    classifier 'javadoc'
+    archiveClassifier.set('javadoc')
 }
 
 artifacts {
